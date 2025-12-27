@@ -1,0 +1,15 @@
+{% extends "store/public/base.html" %}
+{% block title %}Order Success | Thrift Store{% endblock %}
+
+{% block content %}
+<div class="card card-shadow border-0">
+  <div class="card-body p-5 text-center">
+    <div class="display-6 fw-bold mb-2">✅ Order Placed!</div>
+    <p class="text-muted mb-1">Thank you for shopping at Thrift Store.</p>
+    <p class="mb-4">Your order number is <strong>#{{ order.id }}</strong></p>
+
+    <a class="btn btn-dark" href="{% url 'shop' %}">Continue Shopping</a>
+    <a class="btn btn-outline-dark ms-2" href="{% url 'cart_detail' %}">View Cart</a>
+  </div>
+</div>
+{% endblock %}

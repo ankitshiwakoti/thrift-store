@@ -1,0 +1,270 @@
+{% extends "store/public/base.html" %}
+{% block title %}Home | Thrift Store{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<!-- <div class="p-4 p-md-5 hero card-shadow mb-4">
+  <div class="row align-items-center">
+    <div class="col-lg-7">
+      <span class="badge text-bg-warning badge-pill mb-2">New drops weekly</span>
+      <h1 class="display-6 fw-bold">Thrift smarter. Look better. Spend less.</h1>
+      <p class="lead mb-3">
+        Curated pre-loved fashion and essentials. Shop unique finds and support sustainable choices.
+      </p>
+      <div class="d-flex gap-2 flex-wrap">
+        <a class="btn btn-light" href="#featured">Shop New Arrivals</a>
+        <a class="btn btn-outline-light" href="#categories">Browse Categories</a>
+      </div>
+    </div>
+    <div class="col-lg-5 mt-4 mt-lg-0">
+      <div class="bg-dark bg-opacity-50 rounded-4 p-3">
+        <div class="d-flex justify-content-between">
+          <div>
+            <div class="fw-semibold">Fast pickup</div>
+            <div class="text-white-50 small">Local Winnipeg options</div>
+          </div>
+          <div>
+            <div class="fw-semibold">Quality checked</div>
+            <div class="text-white-50 small">Honest condition notes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- HERO (no image needed) -->
+<div class="hero-wrap card-shadow mb-4">
+  <div class="hero-inner p-4 p-md-5">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7 text-white">
+        <div class="hero-pill mb-3">
+          <i class="bi bi-stars"></i>
+          New arrivals every week • Quality checked
+        </div>
+
+        <h1 class="display-6 fw-bold mb-2">
+          Find unique thrift deals you’ll actually wear.
+        </h1>
+
+        <p class="lead text-white-50 mb-4" style="max-width: 52ch;">
+          Curated pre-loved fashion and essentials. Save money, shop sustainably,
+          and grab one-of-a-kind pieces before they’re gone.
+        </p>
+
+        <div class="d-flex gap-2 flex-wrap">
+          <a class="btn btn-light px-4" href="#featured">
+            Shop New Arrivals
+          </a>
+          <a class="btn btn-outline-light px-4" href="#categories">
+            Browse Categories
+          </a>
+        </div>
+
+        <div class="d-flex gap-3 flex-wrap mt-4">
+          <div class="hero-stat p-3">
+            <div class="fw-bold">Affordable</div>
+            <div class="small text-white-50">Budget friendly prices</div>
+          </div>
+          <div class="hero-stat p-3">
+            <div class="fw-bold">Sustainable</div>
+            <div class="small text-white-50">Reduce fashion waste ♻️</div>
+          </div>
+          <div class="hero-stat p-3">
+            <div class="fw-bold">Local</div>
+            <div class="small text-white-50">Winnipeg pickup options</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right side "promo cards" -->
+      <div class="col-lg-5">
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="card card-shadow">
+              <div class="card-body">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="rounded-4 bg-dark text-white d-flex align-items-center justify-content-center"
+                       style="width:44px;height:44px;">
+                    <i class="bi bi-truck"></i>
+                  </div>
+                  <div>
+                    <div class="fw-bold">Fast pickup</div>
+                    <div class="text-muted small">Simple checkout • Local pickup info</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card card-shadow">
+              <div class="card-body">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="rounded-4 bg-dark text-white d-flex align-items-center justify-content-center"
+                       style="width:44px;height:44px;">
+                    <i class="bi bi-shield-check"></i>
+                  </div>
+                  <div>
+                    <div class="fw-bold">Trusted listings</div>
+                    <div class="text-muted small">Clear condition notes • Real photos</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card card-shadow">
+              <div class="card-body">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="rounded-4 bg-dark text-white d-flex align-items-center justify-content-center"
+                       style="width:44px;height:44px;">
+                    <i class="bi bi-tag"></i>
+                  </div>
+                  <div>
+                    <div class="fw-bold">Hot deals</div>
+                    <div class="text-muted small">Great items • Limited stock</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH RESULTS (if q exists) -->
+{% if q %}
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h4 class="mb-0">Search results for “{{ q }}”</h4>
+    <a class="btn btn-sm btn-outline-secondary" href="{% url 'home' %}">Clear</a>
+  </div>
+
+  <div class="row g-3 mb-4">
+    {% for p in search_results %}
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card card-shadow h-100">
+          {% if p.image %}
+            <img src="{{ p.image.url }}" class="card-img-top product-img" alt="{{ p.name }}">
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <div class="small text-muted">{{ p.category.name }}</div>
+            <div class="fw-semibold">{{ p.name }}</div>
+            <div class="mt-1 fw-bold">${{ p.price }}</div>
+            <a class="btn btn-outline-dark btn-sm mt-auto" href="{% url 'product_detail' p.id %}">View</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="text-muted">No matching products found.</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- FEATURED / NEW ARRIVALS -->
+<div class="d-flex justify-content-between align-items-center mb-2" id="featured">
+  <h3 class="mb-0">New Arrivals</h3>
+  <a class="btn btn-sm btn-outline-dark" href="#categories">Browse categories</a>
+</div>
+
+
+<div class="row g-3 mb-4">
+  {% for p in featured_products %}
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+
+      <div class="card pcard h-100">
+
+        <!-- IMAGE -->
+        <div class="pcard-media">
+          {% if p.image %}
+            <img src="{{ p.image.url }}" alt="{{ p.name }}">
+          {% else %}
+            <div class="d-flex align-items-center justify-content-center text-muted" style="height:230px;">
+              No Image
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- BODY -->
+        <div class="pcard-body d-flex flex-column">
+
+          <!-- Title + Price -->
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <div class="pcard-title" title="{{ p.name }}">
+              {{ p.name }}
+            </div>
+            <div class="pcard-price">
+              ${{ p.price }}
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div class="pcard-category mb-3">
+            {{ p.category.name }}
+          </div>
+
+          <!-- Actions -->
+          <div class="mt-auto pcard-actions">
+            <a
+              href="{% url 'product_detail' p.id %}"
+              class="btn btn-outline-dark btn-sm pcard-view"
+            >
+              View
+            </a>
+
+            {% if p.status == "AVAILABLE" %}
+              <a href="#" class="pcard-cart" title="Add to cart">
+                <i class="bi bi-bag-plus"></i>
+              </a>
+            {% else %}
+              <span class="pcard-cart disabled" title="Sold out">
+                <i class="bi bi-bag-x"></i>
+              </span>
+            {% endif %}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  {% empty %}
+    <div class="text-muted">No products yet. Add some from Admin.</div>
+  {% endfor %}
+</div>
+
+
+
+
+<!-- CATEGORIES -->
+<h3 class="mb-3" id="categories">Shop by Category</h3>
+
+<div class="row g-3">
+  {% for c in categories %}
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="card card-shadow h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <h5 class="card-title mb-1">{{ c.name }}</h5>
+            <span class="badge text-bg-light text-dark">Browse</span>
+          </div>
+          <p class="text-muted small mb-3">
+            {{ c.description|default:"Discover items in this category." }}
+          </p>
+          <a href="{% url 'category_products' c.id %}" class="btn btn-outline-dark btn-sm">
+            View Products
+          </a>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="text-muted">No categories available.</div>
+  {% endfor %}
+</div>
+
+{% endblock %}

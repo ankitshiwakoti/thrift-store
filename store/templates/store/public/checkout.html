@@ -1,0 +1,78 @@
+{% extends "store/public/base.html" %}
+{% block title %}Checkout | Thrift Store{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card card-shadow border-0">
+      <div class="card-body p-4">
+        <h3 class="fw-bold mb-1">Checkout</h3>
+        <p class="text-muted mb-4">Enter your delivery information.</p>
+
+        {% if messages %}
+          {% for m in messages %}
+            <div class="alert alert-{{ m.tags }}">{{ m }}</div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input class="form-control" name="full_name" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input class="form-control" name="phone" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Address</label>
+            <textarea class="form-control" name="address" rows="4" required></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Notes (optional)</label>
+            <textarea class="form-control" name="notes" rows="2"></textarea>
+          </div>
+
+          <button class="btn btn-dark btn-lg w-100">
+            Place Order
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card card-shadow border-0">
+      <div class="card-body p-4">
+        <h5 class="fw-bold mb-3">Order Summary</h5>
+
+        {% for it in items %}
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <div class="fw-semibold">{{ it.product.name }}</div>
+              <div class="text-muted small">Qty: {{ it.quantity }} • ${{ it.product.price }}</div>
+            </div>
+            <div class="fw-bold">${{ it.subtotal }}</div>
+          </div>
+        {% endfor %}
+
+        <hr>
+
+        <div class="d-flex justify-content-between">
+          <span class="fw-bold">Total</span>
+          <span class="fw-bold fs-5">${{ cart.total_price }}</span>
+        </div>
+
+        <div class="small text-muted mt-2">
+          No payment gateway in this college demo — order is saved in MySQL.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

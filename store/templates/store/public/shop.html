@@ -1,0 +1,110 @@
+{% extends "store/public/base.html" %}
+
+{% block title %}Shop | Thrift Store{% endblock %}
+
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h2 class="mb-0 fw-bold">Shop</h2>
+    <div class="text-muted small">{{ total }} items</div>
+  </div>
+
+  <!-- Sort -->
+  <form method="get" class="d-flex gap-2">
+    <input type="hidden" name="q" value="{{ q }}">
+    <input type="hidden" name="cat" value="{{ cat_id }}">
+
+    <select name="sort" class="form-select" style="max-width:220px" onchange="this.form.submit()">
+      <option value="new" {% if sort == "new" %}selected{% endif %}>Newest</option>
+      <option value="price_asc" {% if sort == "price_asc" %}selected{% endif %}>Price: Low to High</option>
+      <option value="price_desc" {% if sort == "price_desc" %}selected{% endif %}>Price: High to Low</option>
+      <option value="name" {% if sort == "name" %}selected{% endif %}>Name (A–Z)</option>
+    </select>
+  </form>
+</div>
+
+<div class="row g-4">
+  <!-- LEFT FILTERS -->
+  <div class="col-lg-3">
+    <div class="card card-shadow border-0">
+      <div class="card-body">
+        <h6 class="fw-bold mb-3">Filters</h6>
+
+        <!-- Search -->
+        <form method="get" class="mb-3">
+          <input type="hidden" name="cat" value="{{ cat_id }}">
+          <input type="hidden" name="sort" value="{{ sort }}">
+
+          <label class="form-label small text-muted">Search</label>
+          <input class="form-control" name="q" value="{{ q }}" placeholder="Search products...">
+          <button class="btn btn-dark w-100 mt-2">Search</button>
+        </form>
+
+        <!-- Categories -->
+        <div class="mb-2 small text-muted">Categories</div>
+        <div class="list-group">
+          <a class="list-group-item list-group-item-action {% if not cat_id %}active{% endif %}"
+             href="{% url 'shop' %}?q={{ q }}&sort={{ sort }}">
+            All
+          </a>
+
+          {% for c in categories %}
+            <a class="list-group-item list-group-item-action {% if cat_id|add:'0' == c.id|stringformat:'s' %}active{% endif %}"
+               href="{% url 'shop' %}?cat={{ c.id }}&q={{ q }}&sort={{ sort }}">
+              {{ c.name }}
+            </a>
+          {% endfor %}
+        </div>
+
+        <a class="btn btn-outline-dark w-100 mt-3" href="{% url 'shop' %}">Clear filters</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PRODUCTS -->
+  <div class="col-lg-9">
+    <div class="row g-3">
+      {% for p in products %}
+        <div class="col-12 col-sm-6 col-md-4">
+          <!-- reuse your ecommerce card (simple version) -->
+          <a href="{% url 'product_detail' p.id %}" class="text-decoration-none text-dark">
+            <div class="card pcard h-100">
+              <div class="pcard-media">
+                {% if p.image %}
+                  <img src="{{ p.image.url }}" alt="{{ p.name }}">
+                {% else %}
+                  <div class="d-flex align-items-center justify-content-center text-muted"
+                       style="height:230px;background:#f3f4f6;">
+                    No Image
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="pcard-body d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <div class="pcard-title" title="{{ p.name }}">{{ p.name }}</div>
+                  <div class="pcard-price">${{ p.price }}</div>
+                </div>
+
+                <div class="pcard-category mb-3">{{ p.category.name }}</div>
+
+                <div class="mt-auto d-flex gap-2">
+                  <span class="btn btn-outline-dark btn-sm w-100">View</span>
+                  <!-- Cart icon later -->
+                  <span class="pcard-cart disabled" title="Cart coming soon">
+                    <i class="bi bi-bag-plus"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      {% empty %}
+        <div class="text-muted">No products found.</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

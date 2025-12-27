@@ -1,0 +1,78 @@
+{% extends "store/admin/base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Quick overview of your thrift store{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+
+  <div class="col-12 col-sm-6 col-lg-3">
+    <div class="card card-shadow">
+      <div class="card-body">
+        <div class="muted small">Total Categories</div>
+        <div class="fs-2 fw-bold">{{ total_categories }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-lg-3">
+    <div class="card card-shadow">
+      <div class="card-body">
+        <div class="muted small">Total Products</div>
+        <div class="fs-2 fw-bold">{{ total_products }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-lg-3">
+    <div class="card card-shadow">
+      <div class="card-body">
+        <div class="muted small">Available</div>
+        <div class="fs-2 fw-bold">{{ available_products }}</div>
+        <span class="badge text-bg-success mt-2">In stock</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-sm-6 col-lg-3">
+    <div class="card card-shadow">
+      <div class="card-body">
+        <div class="muted small">Sold</div>
+        <div class="fs-2 fw-bold">{{ sold_products }}</div>
+        <span class="badge text-bg-secondary mt-2">Archived</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="row g-3">
+  <div class="col-12 col-lg-7">
+    <div class="card card-shadow">
+      <div class="card-body">
+        <h5 class="mb-3">Quick Actions</h5>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-primary" href="{% url 'admin_products' %}">Manage Products</a>
+          <a class="btn btn-outline-primary" href="{% url 'admin_add_product' %}">Add Product</a>
+          <a class="btn btn-success" href="{% url 'admin_categories' %}">Manage Categories</a>
+          <a class="btn btn-outline-success" href="{% url 'admin_add_category' %}">Add Category</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-5">
+    <div class="card card-shadow">
+      <div class="card-body">
+        <h5 class="mb-3">Tips</h5>
+        <ul class="mb-0 muted">
+          <li>Add categories first, then products.</li>
+          <li>Mark sold items as “SOLD” instead of deleting.</li>
+          <li>Use clear photos for better listings.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

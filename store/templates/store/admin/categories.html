@@ -1,0 +1,94 @@
+{% extends "store/admin/base.html" %}
+
+{% block title %}Manage Categories{% endblock %}
+{% block page_title %}Categories{% endblock %}
+{% block page_subtitle %}Create, edit, and organize product categories{% endblock %}
+
+{% block content %}
+
+<div class="card card-shadow">
+  <div class="card-body">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+      <div class="input-group" style="max-width: 420px;">
+        <span class="input-group-text">Search</span>
+        <input id="categorySearch" type="text" class="form-control" placeholder="name, description...">
+      </div>
+
+      <div class="d-flex gap-2">
+        <a class="btn btn-success" href="{% url 'admin_add_category' %}">
+          + Add Category
+        </a>
+        <a class="btn btn-outline-secondary" href="{% url 'admin_dashboard' %}">
+          ← Dashboard
+        </a>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0" id="categoriesTable">
+        <thead class="table-light">
+          <tr>
+            <th style="width:80px;">ID</th>
+            <th style="width:220px;">Name</th>
+            <th>Description</th>
+            <th style="width:180px;">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for c in categories %}
+          <tr>
+            <td class="fw-semibold">{{ c.id }}</td>
+            <td class="fw-semibold">{{ c.name }}</td>
+            <td class="text-muted">
+              {% if c.description %}
+                {{ c.description }}
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            <td>
+              <a class="btn btn-sm btn-outline-primary"
+                 href="{% url 'admin_edit_category' c.id %}">
+                Edit
+              </a>
+              <a class="btn btn-sm btn-outline-danger"
+                 href="{% url 'admin_delete_category' c.id %}">
+                Delete
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-center text-muted py-4">
+              No categories yet. Click <strong>Add Category</strong> to create your first one.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Simple client-side search
+  const input = document.getElementById("categorySearch");
+  const table = document.getElementById("categoriesTable");
+  const rows = () => table.querySelectorAll("tbody tr");
+
+  input?.addEventListener("keyup", function () {
+    const q = this.value.toLowerCase().trim();
+    rows().forEach((row) => {
+      const text = row.innerText.toLowerCase();
+      row.style.display = text.includes(q) ? "" : "none";
+    });
+  });
+</script>
+{% endblock %}

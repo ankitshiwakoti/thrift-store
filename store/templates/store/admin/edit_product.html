@@ -1,0 +1,114 @@
+{% extends "store/admin/base.html" %}
+
+{% block title %}Edit Product{% endblock %}
+{% block page_title %}Edit Product{% endblock %}
+{% block page_subtitle %}Update product details, price, image, or status{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8">
+
+    <div class="card card-shadow">
+      <div class="card-body">
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">Product Name</label>
+            <input
+              type="text"
+              name="name"
+              value="{{ product.name }}"
+              class="form-control"
+              required
+            >
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select name="category" class="form-select" required>
+              {% for c in categories %}
+                <option value="{{ c.id }}"
+                  {% if c.id == product.category.id %}selected{% endif %}>
+                  {{ c.name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Price ($)</label>
+              <input
+                type="number"
+                name="price"
+                step="0.01"
+                value="{{ product.price }}"
+                class="form-control"
+                required
+              >
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Status</label>
+              <select name="status" class="form-select">
+                <option value="AVAILABLE"
+                  {% if product.status == "AVAILABLE" %}selected{% endif %}>
+                  Available
+                </option>
+                <option value="SOLD"
+                  {% if product.status == "SOLD" %}selected{% endif %}>
+                  Sold
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea
+              name="description"
+              rows="4"
+              class="form-control"
+            >{{ product.description }}</textarea>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Product Image</label>
+
+            {% if product.image %}
+              <div class="mb-2">
+                <img
+                  src="{{ product.image.url }}"
+                  alt="{{ product.name }}"
+                  style="width:120px;height:120px;object-fit:cover;border-radius:12px;"
+                >
+              </div>
+            {% endif %}
+
+            <input type="file" name="image" class="form-control">
+            <div class="form-text">
+              Upload a new image only if you want to replace the current one.
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'admin_products' %}" class="btn btn-outline-secondary">
+              ← Back
+            </a>
+            <button type="submit" class="btn btn-primary">
+              Update Product
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

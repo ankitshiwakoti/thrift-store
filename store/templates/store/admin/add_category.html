@@ -1,0 +1,56 @@
+{% extends "store/admin/base.html" %}
+
+{% block title %}Add Category{% endblock %}
+{% block page_title %}Add Category{% endblock %}
+{% block page_subtitle %}Create a new product category{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-7">
+
+    <div class="card card-shadow">
+      <div class="card-body">
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">Category Name</label>
+            <input
+              type="text"
+              name="name"
+              class="form-control"
+              placeholder="e.g. Jackets, Shoes, Accessories"
+              required
+            >
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Description</label>
+            <textarea
+              name="description"
+              rows="4"
+              class="form-control"
+              placeholder="Short description of this category (optional)"
+            ></textarea>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'admin_categories' %}" class="btn btn-outline-secondary">
+              ← Back
+            </a>
+            <button type="submit" class="btn btn-success">
+              Save Category
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

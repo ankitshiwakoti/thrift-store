@@ -1,0 +1,159 @@
+{% extends "store/public/base.html" %}
+
+{% block title %}{{ product.name }} | Thrift Store{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<nav class="mb-3" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'category_products' product.category.id %}">{{ product.category.name }}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+  </ol>
+</nav>
+
+<div class="row g-4 align-items-start">
+  <!-- LEFT: Gallery -->
+  <div class="col-lg-7">
+    <div class="card card-shadow border-0">
+      <div class="p-3 p-md-4">
+        <div class="pdp-gallery">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+          {% else %}
+            <div class="text-muted fw-semibold">No Image Available</div>
+          {% endif %}
+        </div>
+
+        <!-- Small info row under image (adds ecommerce feel) -->
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <span class="badge rounded-pill text-bg-light border">Pre-loved</span>
+          <span class="badge rounded-pill text-bg-light border">Budget-friendly</span>
+          <span class="badge rounded-pill text-bg-light border">Limited stock</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Purchase panel -->
+  <div class="col-lg-5">
+    <div class="card card-shadow border-0 pdp-sticky">
+      <div class="card-body p-4">
+
+        <div class="d-flex justify-content-between align-items-start gap-3">
+          <div>
+            <div class="text-muted small">{{ product.category.name }}</div>
+            <h2 class="fw-bold mb-2">{{ product.name }}</h2>
+          </div>
+
+          {% if product.status == "AVAILABLE" %}
+            <span class="badge text-bg-success">Available</span>
+          {% else %}
+            <span class="badge text-bg-secondary">Sold</span>
+          {% endif %}
+        </div>
+
+        <div class="d-flex align-items-end gap-3 mt-2">
+          <div class="display-6 fw-bold mb-0">${{ product.price }}</div>
+          <div class="text-muted small mb-2">Taxes may apply</div>
+        </div>
+
+        <hr class="my-4">
+
+        <h6 class="fw-bold mb-2">Description</h6>
+        <p class="text-muted mb-4">
+          {{ product.description|default:"No description provided."|linebreaksbr }}
+        </p>
+
+        <!-- Ecommerce-style trust row -->
+        <div class="row g-2 mb-4">
+          <div class="col-6">
+            <div class="p-3 rounded-4 border bg-light">
+              <div class="small text-muted">Pickup</div>
+              <div class="fw-semibold">Local option</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-3 rounded-4 border bg-light">
+              <div class="small text-muted">Condition</div>
+              <div class="fw-semibold">As listed</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-grid gap-2">
+          {% if product.status == "AVAILABLE" %}
+            <!-- wire to real cart later -->
+            <!-- <form method="post" action="#" onsubmit="return false;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-dark btn-lg">
+                <i class="bi bi-bag-plus me-2"></i> Add to Cart
+              </button>
+            </form> -->
+<form method="post" action="{% url 'cart_add' product.id %}">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ request.path }}">
+  <button type="submit" class="btn btn-dark btn-lg">
+    <i class="bi bi-bag-plus me-2"></i> Add to Cart
+  </button>
+</form>
+            <button class="btn btn-outline-dark btn-lg" type="button" disabled>
+              <i class="bi bi-lightning-charge me-2"></i> Buy Now (Coming soon)
+            </button>
+          {% else %}
+            <button class="btn btn-secondary btn-lg" disabled>
+              <i class="bi bi-bag-x me-2"></i> Sold Out
+            </button>
+          {% endif %}
+        </div>
+
+        <div class="small text-muted mt-3">
+          Tip: Thrift items are limited stock - once it’s gone, it’s gone.
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OPTIONAL: Related products (same category) -->
+{% if related_products %}
+  <hr class="my-5">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="mb-0 fw-bold">You may also like</h4>
+    <a class="text-decoration-none" href="{% url 'category_products' product.category.id %}">See more</a>
+  </div>
+
+  <div class="row g-3">
+    {% for rp in related_products %}
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <a href="{% url 'product_detail' rp.id %}" class="text-decoration-none text-dark">
+          <div class="card pcard h-100">
+            <div class="pcard-media">
+              {% if rp.image %}
+                <img src="{{ rp.image.url }}" alt="{{ rp.name }}">
+              {% else %}
+                <div class="d-flex align-items-center justify-content-center text-muted" style="height:230px;background:#f3f4f6;">
+                  No Image
+                </div>
+              {% endif %}
+            </div>
+            <div class="pcard-body">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <div class="pcard-title">{{ rp.name }}</div>
+                <div class="pcard-price">${{ rp.price }}</div>
+              </div>
+              <div class="pcard-category">{{ rp.category.name }}</div>
+            </div>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% endblock %}

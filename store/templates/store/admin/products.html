@@ -1,0 +1,116 @@
+{% extends "store/admin/base.html" %}
+
+{% block title %}Manage Products{% endblock %}
+{% block page_title %}Products{% endblock %}
+{% block page_subtitle %}Manage product listings, images, prices, and status{% endblock %}
+
+{% block content %}
+
+<div class="card card-shadow">
+  <div class="card-body">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+      <div class="input-group" style="max-width: 420px;">
+        <span class="input-group-text">Search</span>
+        <input id="productSearch" type="text" class="form-control" placeholder="name, category, status...">
+      </div>
+
+      <div class="d-flex gap-2">
+        <a class="btn btn-primary" href="{% url 'admin_add_product' %}">
+          + Add Product
+        </a>
+        <a class="btn btn-outline-secondary" href="{% url 'admin_dashboard' %}">
+          ← Dashboard
+        </a>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0" id="productsTable">
+        <thead class="table-light">
+          <tr>
+            <th style="width:70px;">ID</th>
+            <th style="width:90px;">Image</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th style="width:120px;">Price</th>
+            <th style="width:140px;">Status</th>
+            <th style="width:170px;">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for p in products %}
+          <tr>
+            <td class="fw-semibold">{{ p.id }}</td>
+
+            <td>
+              {% if p.image %}
+                <img src="{{ p.image.url }}" alt="{{ p.name }}"
+                     style="width:56px;height:56px;object-fit:cover;border-radius:10px;">
+              {% else %}
+                <div class="text-center text-muted border rounded"
+                     style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;">
+                  N/A
+                </div>
+              {% endif %}
+            </td>
+
+            <td class="fw-semibold">{{ p.name }}</td>
+            <td>{{ p.category.name }}</td>
+
+            <td>${{ p.price }}</td>
+
+            <td>
+              {% if p.status == "AVAILABLE" %}
+                <span class="badge text-bg-success">Available</span>
+              {% else %}
+                <span class="badge text-bg-secondary">Sold</span>
+              {% endif %}
+            </td>
+
+            <td>
+              <a class="btn btn-sm btn-outline-primary"
+                 href="{% url 'admin_edit_product' p.id %}">
+                Edit
+              </a>
+              <a class="btn btn-sm btn-outline-danger"
+                 href="{% url 'admin_delete_product' p.id %}">
+                Delete
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">
+              No products found. Click <strong>Add Product</strong> to create your first listing.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Simple client-side search (no backend changes needed)
+  const input = document.getElementById("productSearch");
+  const table = document.getElementById("productsTable");
+  const rows = () => table.querySelectorAll("tbody tr");
+
+  input?.addEventListener("keyup", function () {
+    const q = this.value.toLowerCase().trim();
+
+    rows().forEach((row) => {
+      const text = row.innerText.toLowerCase();
+      row.style.display = text.includes(q) ? "" : "none";
+    });
+  });
+</script>
+{% endblock %}
