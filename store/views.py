@@ -308,9 +308,6 @@ def login_view(request):
 
     return render(request, "store/public/login.html")
 
-
-
-
 def _get_cart(user):
     cart, _ = Cart.objects.get_or_create(user=user)
     return cart

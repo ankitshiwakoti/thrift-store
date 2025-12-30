@@ -291,14 +291,20 @@
        
           {% if request.user.is_authenticated %}
   <span class="text-white me-2 small">Hi, {{ request.user.username }}</span>
-  <a class="icon-btn" href="{% url 'logout' %}" title="Logout">
+  <form method="post" action="{% url 'logout' %}" class="d-inline">
+  {% csrf_token %}
+  <button type="submit" class="icon-btn" title="Logout" style="border:none;background:transparent;">
     <i class="bi bi-box-arrow-right"></i>
-  </a>
+  </button>
+</form>
+    
 {% else %}
   <a class="icon-btn" href="{% url 'login' %}" title="Login">
     <i class="bi bi-person"></i>
   </a>
 {% endif %}
+
+
 
         </div>
 
